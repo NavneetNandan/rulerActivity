@@ -106,9 +106,9 @@ function initialiseHelp()
     helpContent="";
     helpContent = helpContent + "<h2</h2>";
     helpContent = helpContent + "<h3>About the experiment</h3>";
-    helpContent = helpContent + "<p>The experiment shows a teapot over a chessboard and its image in the plane mirror. User can vary position of teapot over chessboard and observe image in mirror</p>";
+    helpContent = helpContent + "<p>The experiment shows two type of rulers. User can drag and rotate them and measure length and breadth of different objects. User can note down their observation in table provided on top right corner.</p>";
     helpContent = helpContent + "<h3>Animation control</h3>";
-    helpContent = helpContent + "<p>User can vary distance from mirror using slider on right top corner or dragging teapot. To vary distance from slider user has to stop the animation first.</p>";
+    helpContent = helpContent + "<p>User can rotate both rulers using controller on top right corner.</p>";
     PIEupdateHelp(helpContent);
 }
 
@@ -117,7 +117,7 @@ function initialiseInfo()
 {
     infoContent =  "";
     infoContent = infoContent + "<h3>About the experiment</h3>";
-    infoContent = infoContent + "<p>Show a chessboard and an object placed on a chessboard. Place a mirror at the side. Show the image and distance from mirror. Allow student to position the object and show image (and distance).</p>";
+    infoContent = infoContent + "<p>Show a meter scale and a foot scale. Allow students to place (drag and rotate) the scale across various objects placed on the screen and note their lengths in meters/cm and feet/inches.</p>";
     PIEupdateInfo(infoContent);
 }
 
@@ -191,9 +191,14 @@ var table;
 var teapot;
 var meters_ruler;
 var feet_ruler;
+var cube;
 function loadExperimentElements()
 {
     planeGeo = new THREE.PlaneBufferGeometry( 100.1, 100.1 );
+    var obj1=document.createElement("li");
+    obj1.style="height:180px;";
+    obj1.innerHTML="<table cellspacing='5px'><tbody><tr><th>Objects</th><th>breadth in cm</th><th>length in cm</th><th>breadth in inches</th><th>length in inches</th></tr><tr><th>Ball</th><td><input size='2'></td><td><input size='2'></td><td><input size='2'></td><td><input size='2'></td></tr><tr><th>Ball</th><td><input size='2'></td><td><input size='2'></td><td><input size='2'></td><td><input size='2'></td></tr><tr><th>Ball</th><td><input size='2'></td><td><input size='2'></td><td><input size='2'></td><td><input size='2'></td></tr></tbody></table>";
+    document.getElementsByClassName("dg main a")[0].children[1].appendChild(obj1);
 var material;
 var loader;
 var texture;
@@ -212,31 +217,57 @@ var texture;
 
     /* initialise Other Variables */
     initialiseOtherVariables();
-    PIEaddInputText("a","sdf");
-    loader.load('table-0001.json',function (obj) {
+    loader.load('https://raw.githubusercontent.com/NavneetNandan/MirrorActivity/master/Experiment/table-0001.json',function (obj) {
         table=obj;
-        table.position.set(3,-0.18,0)
+        table.position.set(3,-0.18,0);
 
         PIEaddElement(table)
     });
     var geometry_meter_ruler = new THREE.BoxGeometry(0.3,2, 0.05);
-    var material_meter_ruler = new THREE.MeshLambertMaterial({map: THREE.ImageUtils.loadTexture('15cm.png')});
+    var material_meter_ruler = new THREE.MeshLambertMaterial({map: THREE.ImageUtils.loadTexture('https://raw.githubusercontent.com/NavneetNandan/rulerActivity/master/Experiment/15cm.png')});
     meters_ruler = new THREE.Mesh(geometry_meter_ruler, material_meter_ruler);
-    meters_ruler.position.set(1.5,1.5,0.25);
+    meters_ruler.position.set(4.3,1.5,0.25);
     meters_ruler.rotateX(-Math.PI/2);
     meters_ruler.castShadow = false;
     meters_ruler.receiveShadow = false;
     PIEdragElement(meters_ruler);
     PIEaddElement(meters_ruler);
     var geometry_feet_ruler = new THREE.BoxGeometry(0.3,2.05, 0.05);
-    var material_feet_ruler = new THREE.MeshLambertMaterial({map: THREE.ImageUtils.loadTexture('f6.jpg')});
+    var material_feet_ruler = new THREE.MeshLambertMaterial({map: THREE.ImageUtils.loadTexture('https://raw.githubusercontent.com/NavneetNandan/rulerActivity/master/Experiment/f6.jpg')});
     feet_ruler = new THREE.Mesh(geometry_feet_ruler, material_feet_ruler);
-    feet_ruler.position.set(4.5,1.5,0.25);
-    feet_ruler.rotateX(-Math.PI/2)
+    feet_ruler.position.set(4.65,1.5,0.25);
+    feet_ruler.rotateX(-Math.PI/2);
     feet_ruler.castShadow = false;
     feet_ruler.receiveShadow = false;
     PIEdragElement(feet_ruler);
     PIEaddElement(feet_ruler);
+    loader.load("https://raw.githubusercontent.com/NavneetNandan/MirrorActivity/master/Experiment/teapot-claraio.json", function (obj) {
+        teapot = obj;
+        teapot.position.set(3.4,1.5,1.25);
+        teapot.scale.x=0.4;
+        teapot.scale.y=0.4;
+        teapot.scale.z=0.4;
+        teapot.rotateX(-Math.PI/2);
+        PIEaddElement(teapot);
+        PIEdragElement(teapot);
+
+    });
+    loader.load("https://raw.githubusercontent.com/NavneetNandan/PIEshadow/master/sampleExperiment/sampleExperiment/rubiks-cube.json?token=AKRkIv1xy4V3T-N784hWJLAY5B86iYnBks5YsQ2wwA%3D%3D",function (obj) {
+        cube = obj;
+        cube.position.set(1.5+0.5,1.5,0.25)
+        cube.scale.x = 0.05;
+        cube.scale.y = 0.05;
+        cube.scale.z = 0.05;
+        PIEdragElement(cube);
+        PIEaddElement(cube);
+    });
+    var myBall;
+    myBall = new THREE.Mesh(new THREE.SphereGeometry(0.2, 32, 32), new THREE.MeshLambertMaterial({color:0xededed}));
+    myBall.position.set(3.8,1.5,-0.5);
+    PIEdragElement(myBall);
+    PIEaddElement(myBall);
+
+    myBall.castShadow = true;
     // tab
     // PIEaddElement(cube);
     // var img = new THREE.MeshLambertMaterial({
@@ -299,17 +330,8 @@ var texture;
     /* Back */
     // material = new THREE.MeshPhongMaterial( { color: 0xffffff, specular: 0x111111, map: texture } );
     // geometry = new THREE.PlaneBufferGeometry( mySceneW * 2, mySceneH * 2 );
-    geometry = new THREE.BoxGeometry( mySceneW * 2, mySceneW * 2, wallThickness );
-    material = new THREE.MeshLambertMaterial( {color: 0xFFFFFF} );
-    myBack = new THREE.Mesh( geometry, material );
-    myBack.position.set(myCenterX, myCenterY, 5);
-    myBack.receiveShadow = true;
-    // PIEaddElement(myBack);
+
     /* Instantiate experiment controls */
-    var planeBack = new THREE.Mesh( planeGeo, new THREE.MeshPhongMaterial( { color: 0x4CAF50 } ) );
-    planeBack.position.z = -2;
-    planeBack.position.y = 0;
-    PIEscene.add( planeBack );
 
     var planeFront = new THREE.Mesh( planeGeo, new THREE.MeshPhongMaterial( { color: 0x7f7fff } ) );
     planeFront.position.z = 2;
@@ -322,6 +344,7 @@ var texture;
     PIEsetAreaOfInterest(mySceneTLX, mySceneTLY, mySceneBRX, mySceneBRY);
     PIEcamera.position.y=6;
     PIEcamera.position.z-=5.2;
+    PIEcamera.position.x+=0.5
     // PIEcamera.position.set(7.5,2,2.5);
     PIEcamera.rotateX(-2*Math.PI/4);
 
@@ -329,8 +352,8 @@ var texture;
     // PIEcamera.rotateY(1.2*Math.PI/4);
     // PIEcamera.rotateOnAxis()
     resetExperiment();
-
     // document.getElementById('reset').click();
+
 
 }
 
@@ -349,7 +372,7 @@ var texture;
  */
 function resetExperiment()
 {
-
+    setTimeout(PIEstartAnimation, 500);
     PIEscene.remove(PIEspotLight);
     /* initialise Other Variables */
     initialiseOtherVariables();
@@ -360,6 +383,8 @@ function resetExperiment()
     // light1.position.set(3,2,0.5);
     // PIEscene.add(light1);
 
+    document.getElementsByClassName("dg main a")[1].style.width="280px";
+    document.getElementsByClassName("dg main a")[0].style.width="280px";
     /* Reset Wall position */
     /* Floor */
     myFloor.position.set(myCenterX, bottomB - (wallThickness / 2), 0.0);
@@ -369,8 +394,6 @@ function resetExperiment()
     myLeft.position.set(leftB-(wallThickness/2)-1, myCenterY, 0.0);
     /* Right */
     myRight.position.set(rightB+(wallThickness/2)+1, myCenterY, 0.0);
-    /* Back */
-    myBack.position.set(myCenterX, myCenterY, backB - (wallThickness / 2)+1);
 }
 
 /******************* End of Reset Experiment code ***********************/
@@ -398,14 +421,16 @@ function resetExperiment()
  */
 function updateExperimentElements(t, dt)
 {
-    PIEscene.remove(PIEspotLight);
-    PIEambientLight.position.set(3,5,0.5);
-    PIEambientLight.intensity=1;
-    document.getElementsByClassName("dg main a")[1].style.width="400px"
-    document.getElementsByClassName("dg main a")[0].style.width="400px"
+    // PIEscene.remove(PIEspotLight);
+    PIEspotLight.position.set(3,5,0.5);
+    // PIEambientLight.intensity=1;
+
     // PIEambientLight.castShadow=true;
     PIErender();
     PIEstopAnimation();
+
+    document.getElementsByClassName("dg main a")[1].style.width="280px";
+    document.getElementsByClassName("dg main a")[0].style.width="280px";
 }
 
 /******************* Update (animation changes) code ***********************/

@@ -32,9 +32,6 @@ var myLeft;             /* Left */
 /* Ball variables */
 var myBallRadius;       /* Radius */
 
-var teapotX;
-var teapotY;
-var teapotZ;
 /* Parameters, Variables */
 var gravityX;           /* X component of Gravity in m/S2 */
 var gravityY;           /* Y component of Gravity in m/S2 */
@@ -47,13 +44,6 @@ var ASPECT = WIDTH / HEIGHT;
 var NEAR = 1;
 var FAR = 500;
 var distance_from_mirror;
-
-function myTeapotDrag(element, newpos)
-{
-
-    // PIEaddElement(line);
-
-}
 
 function inArray(value, array) {
     for (var i = 0; i < array.length; i++) {
@@ -168,25 +158,6 @@ function loadScript(url, callback)
     head.appendChild(script);
 }
 var planeGeo ;
-var frame;
-// function callbackMirrorLoad() {
-//     verticalMirror = new THREE.Mirror( PIErenderer, PIEcamera, { clipBias: 0.003, textureWidth: WIDTH, textureHeight: HEIGHT, color:0x889999 } );
-//     var verticalMirrorMesh = new THREE.Mesh( new THREE.PlaneBufferGeometry( 2, 1.5 ), verticalMirror.material );
-//     verticalMirrorMesh.add( verticalMirror );
-//     verticalMirrorMesh.position.y = 1.8;
-//     verticalMirrorMesh.position.x = 3;
-//     verticalMirrorMesh.position.z = -1.5;
-//     var geometry = new THREE.BoxGeometry( 2.2, 1.7, 0.001);
-//     var material = new THREE.MeshLambertMaterial( {color: 0x4E342E} );
-//     frame  = new THREE.Mesh( geometry, material );
-//     frame.position.set(3,1.8,-1.6);
-//     PIEaddElement(frame);
-//     PIEscene.add( verticalMirrorMesh );
-//     distance_from_mirror=1.5;
-//     console.log(distance_from_mirror);
-//     PIEstartAnimation();
-// }
-var chessboard;
 var table;
 var teapot;
 var meters_ruler;
@@ -195,19 +166,13 @@ var cube;
 function loadExperimentElements()
 {
     planeGeo = new THREE.PlaneBufferGeometry( 100.1, 100.1 );
-    var obj1=document.createElement("li");
-    obj1.style="height:180px;";
-    obj1.innerHTML="<table cellspacing='5px'><tbody><tr><th>Objects</th><th>breadth in cm</th><th>length in cm</th><th>breadth in inches</th><th>length in inches</th></tr><tr><th>Ball</th><td><input size='2'></td><td><input size='2'></td><td><input size='2'></td><td><input size='2'></td></tr><tr><th>Ball</th><td><input size='2'></td><td><input size='2'></td><td><input size='2'></td><td><input size='2'></td></tr><tr><th>Ball</th><td><input size='2'></td><td><input size='2'></td><td><input size='2'></td><td><input size='2'></td></tr></tbody></table>";
-    document.getElementsByClassName("dg main a")[0].children[1].appendChild(obj1);
-var material;
-var loader;
-var texture;
-    PIEsetExperimentTitle("Position of the image");
+    var material;
+    var loader;
+    var texture;
+    PIEsetExperimentTitle("The standard scales");
     PIEsetDeveloperName("Navneet Nandan");
     PIEhideControlElement();
     loader = new THREE.ObjectLoader();
-    // loadScript("https://threejs.org/examples/js/Mirror.js",callbackMirrorLoad);
-
     /* initialise help and info content */
     initialiseHelp();
     initialiseInfo();
@@ -217,31 +182,33 @@ var texture;
 
     /* initialise Other Variables */
     initialiseOtherVariables();
-    loader.load('https://raw.githubusercontent.com/NavneetNandan/MirrorActivity/master/Experiment/table-0001.json',function (obj) {
+    // loader.load('https://raw.githubusercontent.com/NavneetNandan/MirrorActivity/master/Experiment/table-0001.json',function (obj) {
+    loader.load('table-0001.json',function (obj) {
         table=obj;
         table.position.set(3,-0.18,0);
 
         PIEaddElement(table)
     });
     var geometry_meter_ruler = new THREE.BoxGeometry(0.3,2, 0.05);
-    var material_meter_ruler = new THREE.MeshLambertMaterial({map: THREE.ImageUtils.loadTexture('https://raw.githubusercontent.com/NavneetNandan/rulerActivity/master/Experiment/15cm.png')});
+    var material_meter_ruler = new THREE.MeshLambertMaterial({map: THREE.ImageUtils.loadTexture('15cm.png')});
     meters_ruler = new THREE.Mesh(geometry_meter_ruler, material_meter_ruler);
-    meters_ruler.position.set(4.3,1.5,0.25);
     meters_ruler.rotateX(-Math.PI/2);
-    meters_ruler.castShadow = false;
-    meters_ruler.receiveShadow = false;
     PIEdragElement(meters_ruler);
     PIEaddElement(meters_ruler);
+
+    meters_ruler.castShadow = false;
+    meters_ruler.receiveShadow = false;
     var geometry_feet_ruler = new THREE.BoxGeometry(0.3,2.05, 0.05);
-    var material_feet_ruler = new THREE.MeshLambertMaterial({map: THREE.ImageUtils.loadTexture('https://raw.githubusercontent.com/NavneetNandan/rulerActivity/master/Experiment/f6.jpg')});
+    var material_feet_ruler = new THREE.MeshLambertMaterial({map: THREE.ImageUtils.loadTexture('f6.jpg')});
     feet_ruler = new THREE.Mesh(geometry_feet_ruler, material_feet_ruler);
-    feet_ruler.position.set(4.65,1.5,0.25);
     feet_ruler.rotateX(-Math.PI/2);
-    feet_ruler.castShadow = false;
-    feet_ruler.receiveShadow = false;
     PIEdragElement(feet_ruler);
     PIEaddElement(feet_ruler);
-    loader.load("https://raw.githubusercontent.com/NavneetNandan/MirrorActivity/master/Experiment/teapot-claraio.json", function (obj) {
+    feet_ruler.castShadow = false;
+    feet_ruler.receiveShadow = false;
+
+    // loader.load("https://raw.githubusercontent.com/NavneetNandan/MirrorActivity/master/Experiment/teapot-claraio.json", function (obj) {
+    loader.load("teapot-claraio.json", function (obj) {
         teapot = obj;
         teapot.position.set(3.4,1.5,1.25);
         teapot.scale.x=0.4;
@@ -249,17 +216,21 @@ var texture;
         teapot.scale.z=0.4;
         teapot.rotateX(-Math.PI/2);
         PIEaddElement(teapot);
+        teapot.castShadow=false;
         PIEdragElement(teapot);
 
     });
-    loader.load("https://raw.githubusercontent.com/NavneetNandan/PIEshadow/master/sampleExperiment/sampleExperiment/rubiks-cube.json?token=AKRkIv1xy4V3T-N784hWJLAY5B86iYnBks5YsQ2wwA%3D%3D",function (obj) {
+    // loader.load("https://raw.githubusercontent.com/NavneetNandan/PIEshadow/master/sampleExperiment/sampleExperiment/rubiks-cube.json?token=AKRkIv1xy4V3T-N784hWJLAY5B86iYnBks5YsQ2wwA%3D%3D",function (obj) {
+    loader.load("rubiks-cube.json",function (obj) {
         cube = obj;
-        cube.position.set(1.5+0.5,1.5,0.25)
+        cube.position.set(1.5+0.5,1.5,0.25);
         cube.scale.x = 0.05;
         cube.scale.y = 0.05;
         cube.scale.z = 0.05;
         PIEdragElement(cube);
         PIEaddElement(cube);
+        cube.castShadow=false;
+        cube.receiveShadow=false;
     });
     var myBall;
     myBall = new THREE.Mesh(new THREE.SphereGeometry(0.2, 32, 32), new THREE.MeshLambertMaterial({color:0xededed}));
@@ -267,35 +238,7 @@ var texture;
     PIEdragElement(myBall);
     PIEaddElement(myBall);
 
-    myBall.castShadow = true;
-    // tab
-    // PIEaddElement(cube);
-    // var img = new THREE.MeshLambertMaterial({
-    //     map:THREE.ImageUtils.loadTexture('rinG8A7qT.gif')
-    // });
-    // var geometry=new THREE.BoxGeometry(20,20,50);
-    // var box=new THREE.Mesh(geometry,img);
-    // box.position.set(arrowX,arrowY,arrowZ);
-    // PIEaddElement(box);
-    /* Create Ball and add it to scene */
-    // arrow = new THREE.Mesh(new THREE.SphereGeometry(myBallRadius, 32, 32), new THREE.MeshLambertMaterial({color:0xededed}));
-    // arrow.position.set(arrowX, arrowY, myBallZ);
-    // arrow.castShadow = true;
-    // arrow.receiveShadow = true;
-    // PIEaddElement(arrow);
-    /* Allow Dragging of the ball */
-
-
-    /* Initialise Wall variables */
-    /* All walls extend beynd the room size in both directions */
-    /* Floor */
-    // loader = new THREE.TextureLoader();
-    // texture = loader.load( '../PIE/images/hardwood2_diffuse.jpg' );
-    // texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
-    // texture.repeat.set( 25, 25 );
-    // texture.anisotropy = 16;
-    // material = new THREE.MeshPhongMaterial( { color: 0xffffff, specular: 0x111111, map: texture } );
-    // geometry = new THREE.PlaneBufferGeometry( mySceneW * 2, backB * 2 );
+    myBall.castShadow = false;
     geometry = new THREE.BoxGeometry( mySceneW * 2, wallThickness, 100);
     material = new THREE.MeshLambertMaterial( {color: 0x4E342E} );
     myFloor  = new THREE.Mesh( geometry, material );
@@ -372,11 +315,12 @@ var texture;
  */
 function resetExperiment()
 {
-    setTimeout(PIEstartAnimation, 500);
-    PIEscene.remove(PIEspotLight);
+    setTimeout(PIEstartAnimation, 1000);
     /* initialise Other Variables */
     initialiseOtherVariables();
     // PIEaddElement(line);
+    meters_ruler.position.set(4.3,1.5,0.25);
+    feet_ruler.position.set(4.65,1.5,0.25);
 
 
     // var light1= new THREE.PointLight(0xffffff, 1, 0, 0);
@@ -424,7 +368,7 @@ function updateExperimentElements(t, dt)
     // PIEscene.remove(PIEspotLight);
     PIEspotLight.position.set(3,5,0.5);
     // PIEambientLight.intensity=1;
-
+    PIEspotLight.castShadow=false;
     // PIEambientLight.castShadow=true;
     PIErender();
     PIEstopAnimation();

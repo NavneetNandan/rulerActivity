@@ -31,19 +31,15 @@ var myLeft;             /* Left */
 
 /* Ball variables */
 var myBallRadius;       /* Radius */
-
+var object_position_x;
+var object_position_y;
+var object_position_z;
 /* Parameters, Variables */
 var gravityX;           /* X component of Gravity in m/S2 */
 var gravityY;           /* Y component of Gravity in m/S2 */
 var bow;
 var WIDTH = window.innerWidth;
 var HEIGHT = window.innerHeight;
-// camera
-var VIEW_ANGLE = 45;
-var ASPECT = WIDTH / HEIGHT;
-var NEAR = 1;
-var FAR = 500;
-var distance_from_mirror;
 
 function inArray(value, array) {
     for (var i = 0; i < array.length; i++) {
@@ -74,12 +70,39 @@ function initialiseControlVariables() {
     /* Labels */
 }
 
+function addButtonToControls(text) {
+    var button=document.createElement("button");
+    button.setAttribute("id", text);
+    button.setAttribute("class", "objects");
+    button.setAttribute("style","margin-left: 5px;");
 
+    button.innerHTML = text;
+    document.getElementById("object_selection_list").appendChild(button);
+}
 function initialiseControls() {
     initialiseControlVariables();
-    /* Create Input Panel */
-    // PIEaddDisplaySlider("Distance from Mirror", 1.5, 0.82, 2.14, 0.01);
-
+    var list=document.createElement("li");
+    list.setAttribute("id","object_selection_list");
+    document.getElementsByClassName("dg main a")[0].children[1].appendChild(list);
+    addButtonToControls("Ball");
+    addButtonToControls("Cube");
+    addButtonToControls("Teapot");
+    addButtonToControls("4thObj");
+    document.getElementById("Ball").onclick=function () {
+      createAndAddBall();
+    };
+    document.getElementById("Cube").onclick=function () {
+      createAndAddCube();
+      PIErender();
+    };
+    document.getElementById("Teapot").onclick=function () {
+      createAndAddTeapot();
+      PIErender();
+    };
+    document.getElementById("Ball").onclick=function () {
+      createAndAddBall();
+      PIErender();
+    };
     PIEaddInputSlider("Rotate Meter Scale", 0, handleZrotationmeter, -180, 180, 1);
     PIEaddInputSlider("Rotate Feet Scale", 0, handleZrotationfeet, -180, 180, 1);
     /* Create Display Panel */
@@ -118,6 +141,10 @@ function initialiseScene()
     mySceneTLY = 3.0;
     mySceneBRX = 6.0;
     mySceneBRY = 0.0;
+    object_position_x=2.964652908993941;
+    object_position_y=1.5;
+    object_position_z=0.26;
+
     mySceneW   = (mySceneBRX - mySceneTLX);
     mySceneH   = (mySceneTLY - mySceneBRY);
     myCenterX  = (mySceneTLX + mySceneBRX) / 2.0;
@@ -163,11 +190,64 @@ var teapot;
 var meters_ruler;
 var feet_ruler;
 var cube;
+var current;
+var myBall;
+var loader;
+
+function createAndAddTeapot() {
+    loader.load("teapot-claraio.json", function (obj) {
+        if(current!=null){
+            PIEscene.remove(current);
+        }
+        teapot = obj;
+        teapot.position.set(object_position_x, object_position_y, object_position_z);
+        teapot.scale.x = 0.4;
+        teapot.scale.y = 0.4;
+        teapot.scale.z = 0.4;
+        teapot.rotateX(-Math.PI / 2);
+        current=teapot;
+        PIEaddElement(teapot);
+        teapot.castShadow = false;
+        PIEdragElement(teapot);
+        PIErender();
+    });
+}
+function createAndAddCube() {
+    loader.load("rubiks-cube.json", function (obj) {
+        if (current != null) {
+            PIEscene.remove(current);
+        }
+        cube = obj;
+        cube.position.set(object_position_x, object_position_y, object_position_z);
+        cube.scale.x = 0.05;
+        cube.scale.y = 0.05;
+        cube.scale.z = 0.05;
+        PIEdragElement(cube);
+        PIEaddElement(cube);
+        current = cube;
+        cube.castShadow = false;
+        cube.receiveShadow = false;
+        PIErender();
+    });
+}
+function createAndAddBall() {
+    console.log("a");
+    if (current != null) {
+        console.log("b");
+        PIEscene.remove(current);
+    }
+    myBall = new THREE.Mesh(new THREE.SphereGeometry(0.2, 32, 32), new THREE.MeshLambertMaterial({color: 0xededed}));
+    myBall.position.set(object_position_x,object_position_y,object_position_z);
+    PIEdragElement(myBall);
+    PIEaddElement(myBall);
+    current=myBall;
+    myBall.castShadow = false;
+    PIErender();
+}
 function loadExperimentElements()
 {
     planeGeo = new THREE.PlaneBufferGeometry( 100.1, 100.1 );
     var material;
-    var loader;
     var texture;
     PIEsetExperimentTitle("The standard scales");
     PIEsetDeveloperName("Navneet Nandan");
@@ -208,37 +288,10 @@ function loadExperimentElements()
     feet_ruler.receiveShadow = false;
 
     // loader.load("https://raw.githubusercontent.com/NavneetNandan/MirrorActivity/master/Experiment/teapot-claraio.json", function (obj) {
-    loader.load("teapot-claraio.json", function (obj) {
-        teapot = obj;
-        teapot.position.set(3.4,1.5,1.25);
-        teapot.scale.x=0.4;
-        teapot.scale.y=0.4;
-        teapot.scale.z=0.4;
-        teapot.rotateX(-Math.PI/2);
-        PIEaddElement(teapot);
-        teapot.castShadow=false;
-        PIEdragElement(teapot);
-
-    });
+    // createAndAddTeapot(loader);
     // loader.load("https://raw.githubusercontent.com/NavneetNandan/PIEshadow/master/sampleExperiment/sampleExperiment/rubiks-cube.json?token=AKRkIv1xy4V3T-N784hWJLAY5B86iYnBks5YsQ2wwA%3D%3D",function (obj) {
-    loader.load("rubiks-cube.json",function (obj) {
-        cube = obj;
-        cube.position.set(1.5+0.5,1.5,0.25);
-        cube.scale.x = 0.05;
-        cube.scale.y = 0.05;
-        cube.scale.z = 0.05;
-        PIEdragElement(cube);
-        PIEaddElement(cube);
-        cube.castShadow=false;
-        cube.receiveShadow=false;
-    });
-    var myBall;
-    myBall = new THREE.Mesh(new THREE.SphereGeometry(0.2, 32, 32), new THREE.MeshLambertMaterial({color:0xededed}));
-    myBall.position.set(3.8,1.5,-0.5);
-    PIEdragElement(myBall);
-    PIEaddElement(myBall);
-
-    myBall.castShadow = false;
+    // createAndAddCube(loader);
+    // createAndAddBall();
     geometry = new THREE.BoxGeometry( mySceneW * 2, wallThickness, 100);
     material = new THREE.MeshLambertMaterial( {color: 0x4E342E} );
     myFloor  = new THREE.Mesh( geometry, material );
@@ -290,7 +343,6 @@ function loadExperimentElements()
     PIEcamera.position.x+=0.5
     // PIEcamera.position.set(7.5,2,2.5);
     PIEcamera.rotateX(-2*Math.PI/4);
-
     PIEscene.remove(PIEspotLight);
     // PIEcamera.rotateY(1.2*Math.PI/4);
     // PIEcamera.rotateOnAxis()
@@ -319,10 +371,19 @@ function resetExperiment()
     /* initialise Other Variables */
     initialiseOtherVariables();
     // PIEaddElement(line);
+    meters_ruler.rotation.x=-1.5707963267948963;
+    meters_ruler.rotation.y=0;
+    meters_ruler.rotation.z=0;
+    feet_ruler.rotation.x=-1.5707963267948963;
+    PIEchangeInputSlider("Rotate Meter Scale",0);
+    feet_ruler.rotation.y=0;
+    feet_ruler.rotation.z=0;
     meters_ruler.position.set(4.3,1.5,0.25);
     feet_ruler.position.set(4.65,1.5,0.25);
-
-
+    PIEchangeInputSlider("Rotate Feet Scale",0);
+    if(current!=null) {
+        PIEscene.remove(current);
+    }
     // var light1= new THREE.PointLight(0xffffff, 1, 0, 0);
     // light1.position.set(3,2,0.5);
     // PIEscene.add(light1);

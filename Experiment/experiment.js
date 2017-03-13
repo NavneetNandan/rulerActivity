@@ -88,7 +88,7 @@ function initialiseControls() {
     addButtonToControls("Cube");
     addButtonToControls("Teapot");
     addButtonToControls("Arrow");
-    addButtonToControls("Music Player");
+    addButtonToControls("Shoe");
 
     document.getElementById("Ball").onclick=function () {
       createAndAddBall();
@@ -106,8 +106,8 @@ function initialiseControls() {
       PIErender();
     };
 
-    document.getElementById("Music Player").onclick=function () {
-      createAndAddMusicPlayer();
+    document.getElementById("Shoe").onclick=function () {
+      createAndAddShoe();
       PIErender();
     };
     PIEaddInputSlider("Rotate Meter Scale", 0, handleZrotationmeter, -180, 180, 1);
@@ -200,7 +200,7 @@ var cube;
 var current;
 var myBall;
 var loader;
-var musicplayer;
+var shoe;
 function createAndAddTeapot() {
     loader.load("teapot-claraio.json", function (obj) {
         if(current!=null){
@@ -239,32 +239,32 @@ function createAndAddArrow() {
         PIErender();
     });
 }
-function createMusicPlayer() {
-    loader.load("cassette-player.json", function (obj) {
-        musicplayer = obj;
-        musicplayer.position.set(object_position_x, object_position_y, object_position_z);
-        musicplayer.scale.x = 0.02;
-        musicplayer.scale.y = 0.02;
-        musicplayer.scale.z = 0.02;
-        musicplayer.rotateY(-Math.PI);
-        // musicplayer.rotateZ(-Math.PI / 2);
-        musicplayer.rotateX(Math.PI / 2);
-        musicplayer.castShadow = false;
+function createShoe() {
+    loader.load("nike-air-max-low-poly.json", function (obj) {
+        shoe = obj;
+        shoe.position.set(object_position_x, object_position_y, object_position_z);
+        shoe.scale.x = 0.05;
+        shoe.scale.y = 0.05;
+        shoe.scale.z = 0.05;
+        shoe.rotateY(-Math.PI);
+        // shoe.rotateZ(-Math.PI / 2);
+        shoe.rotateX(Math.PI / 2);
+        shoe.castShadow = false;
         console.log("af");
-        return musicplayer;
+        return shoe;
         // PIEdragElement(musicplayer);
     });
 }
-function createAndAddMusicPlayer() {
+function createAndAddShoe() {
     if (current != null) {
         PIEscene.remove(current);
     }
-    if(musicplayer!=null) {
-        PIEaddElement(musicplayer);
-        current = musicplayer;
+    if(shoe!=null) {
+        PIEaddElement(shoe);
+        current = shoe;
         PIErender();
     }else{
-        setTimeout(createAndAddMusicPlayer, 500);
+        setTimeout(createAndAddShoe, 500);
     }
 }
 function createAndAddCube() {
@@ -308,7 +308,7 @@ function loadExperimentElements()
     PIEsetDeveloperName("Navneet Nandan");
     PIEhideControlElement();
     loader = new THREE.ObjectLoader();
-    musicplayer=createMusicPlayer();
+    shoe=createShoe();
 
     /* initialise help and info content */
     initialiseHelp();

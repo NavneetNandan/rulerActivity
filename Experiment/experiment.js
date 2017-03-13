@@ -37,9 +37,7 @@ var object_position_z;
 /* Parameters, Variables */
 var gravityX;           /* X component of Gravity in m/S2 */
 var gravityY;           /* Y component of Gravity in m/S2 */
-var bow;
-var WIDTH = window.innerWidth;
-var HEIGHT = window.innerHeight;
+
 
 function inArray(value, array) {
     for (var i = 0; i < array.length; i++) {
@@ -49,8 +47,6 @@ function inArray(value, array) {
     return false;
 }
 
-function updateInitialVelocity() {
-}
 /******************* End of Interaction functions ***********************/
 
 /******************* GUI control objects code ***********************/
@@ -202,7 +198,8 @@ var myBall;
 var loader;
 var shoe;
 function createAndAddTeapot() {
-    loader.load("teapot-claraio.json", function (obj) {
+    loader.load("https://raw.githubusercontent.com/NavneetNandan/MirrorActivity/master/Experiment/teapot-claraio.json", function (obj) {
+    // loader.load("teapot-claraio.json", function (obj) {
         if(current!=null){
             PIEscene.remove(current);
         }
@@ -220,7 +217,7 @@ function createAndAddTeapot() {
     });
 }
 function createAndAddArrow() {
-    loader.load("sun-dial-arrow.json", function (obj) {
+    loader.load("https://raw.githubusercontent.com/NavneetNandan/rulerActivity/master/Experiment/sun-dial-arrow.json", function (obj) {
         if(current!=null){
             PIEscene.remove(current);
         }
@@ -240,7 +237,7 @@ function createAndAddArrow() {
     });
 }
 function createShoe() {
-    loader.load("nike-air-max-low-poly.json", function (obj) {
+    loader.load("https://raw.githubusercontent.com/NavneetNandan/rulerActivity/master/Experiment/nike-air-max-low-poly.json", function (obj) {
         shoe = obj;
         shoe.position.set(object_position_x, object_position_y, object_position_z);
         shoe.scale.x = 0.05;
@@ -268,7 +265,8 @@ function createAndAddShoe() {
     }
 }
 function createAndAddCube() {
-    loader.load("rubiks-cube.json", function (obj) {
+    loader.load("https://raw.githubusercontent.com/NavneetNandan/PIEshadow/master/sampleExperiment/sampleExperiment/rubiks-cube.json?token=AKRkIv1xy4V3T-N784hWJLAY5B86iYnBks5YsQ2wwA%3D%3D",function (obj) {
+    // loader.load("rubiks-cube.json", function (obj) {
         if (current != null) {
             PIEscene.remove(current);
         }
@@ -318,15 +316,15 @@ function loadExperimentElements()
 
     /* initialise Other Variables */
     initialiseOtherVariables();
-    // loader.load('https://raw.githubusercontent.com/NavneetNandan/MirrorActivity/master/Experiment/table-0001.json',function (obj) {
-    loader.load('table-0001.json',function (obj) {
+    loader.load('https://raw.githubusercontent.com/NavneetNandan/MirrorActivity/master/Experiment/table-0001.json',function (obj) {
+    // loader.load('table-0001.json',function (obj) {
         table=obj;
         table.position.set(3,-0.18,0);
 
         PIEaddElement(table)
     });
     var geometry_meter_ruler = new THREE.BoxGeometry(0.3,2, 0.05);
-    var material_meter_ruler = new THREE.MeshLambertMaterial({map: THREE.ImageUtils.loadTexture('15cm.png')});
+    var material_meter_ruler = new THREE.MeshLambertMaterial({map: THREE.ImageUtils.loadTexture('https://raw.githubusercontent.com/NavneetNandan/rulerActivity/master/Experiment/15cm.png')});
     meters_ruler = new THREE.Mesh(geometry_meter_ruler, material_meter_ruler);
     meters_ruler.rotateX(-Math.PI/2);
     PIEdragElement(meters_ruler);
@@ -335,7 +333,7 @@ function loadExperimentElements()
     meters_ruler.castShadow = false;
     meters_ruler.receiveShadow = false;
     var geometry_feet_ruler = new THREE.BoxGeometry(0.3,2.05, 0.05);
-    var material_feet_ruler = new THREE.MeshLambertMaterial({map: THREE.ImageUtils.loadTexture('f6.jpg')});
+    var material_feet_ruler = new THREE.MeshLambertMaterial({map: THREE.ImageUtils.loadTexture('https://raw.githubusercontent.com/NavneetNandan/rulerActivity/master/Experiment/f6.jpg')});
     feet_ruler = new THREE.Mesh(geometry_feet_ruler, material_feet_ruler);
     feet_ruler.rotateX(-Math.PI/2);
     PIEdragElement(feet_ruler);
@@ -343,9 +341,7 @@ function loadExperimentElements()
     feet_ruler.castShadow = false;
     feet_ruler.receiveShadow = false;
 
-    // loader.load("https://raw.githubusercontent.com/NavneetNandan/MirrorActivity/master/Experiment/teapot-claraio.json", function (obj) {
     // createAndAddTeapot(loader);
-    // loader.load("https://raw.githubusercontent.com/NavneetNandan/PIEshadow/master/sampleExperiment/sampleExperiment/rubiks-cube.json?token=AKRkIv1xy4V3T-N784hWJLAY5B86iYnBks5YsQ2wwA%3D%3D",function (obj) {
     // createAndAddCube(loader);
     // createAndAddBall();
     geometry = new THREE.BoxGeometry( mySceneW * 2, wallThickness, 100);

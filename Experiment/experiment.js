@@ -87,7 +87,9 @@ function initialiseControls() {
     addButtonToControls("Ball");
     addButtonToControls("Cube");
     addButtonToControls("Teapot");
-    addButtonToControls("4thObj");
+    addButtonToControls("Arrow");
+    addButtonToControls("Music Player");
+
     document.getElementById("Ball").onclick=function () {
       createAndAddBall();
     };
@@ -99,8 +101,13 @@ function initialiseControls() {
       createAndAddTeapot();
       PIErender();
     };
-    document.getElementById("Ball").onclick=function () {
-      createAndAddBall();
+    document.getElementById("Arrow").onclick=function () {
+      createAndAddArrow();
+      PIErender();
+    };
+
+    document.getElementById("Music Player").onclick=function () {
+      createAndAddMusicPlayer();
       PIErender();
     };
     PIEaddInputSlider("Rotate Meter Scale", 0, handleZrotationmeter, -180, 180, 1);
@@ -119,7 +126,7 @@ function initialiseHelp()
     helpContent="";
     helpContent = helpContent + "<h2</h2>";
     helpContent = helpContent + "<h3>About the experiment</h3>";
-    helpContent = helpContent + "<p>The experiment shows two type of rulers. User can drag and rotate them and measure length and breadth of different objects. User can note down their observation in table provided on top right corner.</p>";
+    helpContent = helpContent + "<p>The experiment shows two type of rulers. User can drag and rotate them and measure length and breadth of different objects. User can select objects by clicking on buttons on control section</p>";
     helpContent = helpContent + "<h3>Animation control</h3>";
     helpContent = helpContent + "<p>User can rotate both rulers using controller on top right corner.</p>";
     PIEupdateHelp(helpContent);
@@ -193,7 +200,7 @@ var cube;
 var current;
 var myBall;
 var loader;
-
+var musicplayer;
 function createAndAddTeapot() {
     loader.load("teapot-claraio.json", function (obj) {
         if(current!=null){
@@ -211,6 +218,54 @@ function createAndAddTeapot() {
         PIEdragElement(teapot);
         PIErender();
     });
+}
+function createAndAddArrow() {
+    loader.load("sun-dial-arrow.json", function (obj) {
+        if(current!=null){
+            PIEscene.remove(current);
+        }
+        arrow = obj.children[0];
+        arrow.position.set(object_position_x, object_position_y, object_position_z);
+        arrow.scale.x = 0.8;
+        arrow.scale.y = 0.8;
+        arrow.scale.z = 0.8;
+        arrow.rotateY(-Math.PI / 2);
+        // arrow.rotateZ(-Math.PI / 2);
+        arrow.rotateX(-Math.PI / 2);
+        current=arrow;
+        PIEaddElement(arrow);
+        arrow.castShadow = false;
+        PIEdragElement(arrow);
+        PIErender();
+    });
+}
+function createMusicPlayer() {
+    loader.load("cassette-player.json", function (obj) {
+        musicplayer = obj;
+        musicplayer.position.set(object_position_x, object_position_y, object_position_z);
+        musicplayer.scale.x = 0.02;
+        musicplayer.scale.y = 0.02;
+        musicplayer.scale.z = 0.02;
+        musicplayer.rotateY(-Math.PI);
+        // musicplayer.rotateZ(-Math.PI / 2);
+        musicplayer.rotateX(Math.PI / 2);
+        musicplayer.castShadow = false;
+        console.log("af");
+        return musicplayer;
+        // PIEdragElement(musicplayer);
+    });
+}
+function createAndAddMusicPlayer() {
+    if (current != null) {
+        PIEscene.remove(current);
+    }
+    if(musicplayer!=null) {
+        PIEaddElement(musicplayer);
+        current = musicplayer;
+        PIErender();
+    }else{
+        setTimeout(createAndAddMusicPlayer, 500);
+    }
 }
 function createAndAddCube() {
     loader.load("rubiks-cube.json", function (obj) {
@@ -253,10 +308,11 @@ function loadExperimentElements()
     PIEsetDeveloperName("Navneet Nandan");
     PIEhideControlElement();
     loader = new THREE.ObjectLoader();
+    musicplayer=createMusicPlayer();
+
     /* initialise help and info content */
     initialiseHelp();
     initialiseInfo();
-
     /* initialise Scene */
     initialiseScene();
 
@@ -340,7 +396,7 @@ function loadExperimentElements()
     PIEsetAreaOfInterest(mySceneTLX, mySceneTLY, mySceneBRX, mySceneBRY);
     PIEcamera.position.y=6;
     PIEcamera.position.z-=5.2;
-    PIEcamera.position.x+=0.5
+    PIEcamera.position.x+=0.5;
     // PIEcamera.position.set(7.5,2,2.5);
     PIEcamera.rotateX(-2*Math.PI/4);
     PIEscene.remove(PIEspotLight);
@@ -367,6 +423,8 @@ function loadExperimentElements()
  */
 function resetExperiment()
 {
+    document.getElementsByClassName("dg main a")[1].style.width="340px";
+    document.getElementsByClassName("dg main a")[0].style.width="340px";
     setTimeout(PIEstartAnimation, 1000);
     /* initialise Other Variables */
     initialiseOtherVariables();
@@ -387,9 +445,6 @@ function resetExperiment()
     // var light1= new THREE.PointLight(0xffffff, 1, 0, 0);
     // light1.position.set(3,2,0.5);
     // PIEscene.add(light1);
-
-    document.getElementsByClassName("dg main a")[1].style.width="280px";
-    document.getElementsByClassName("dg main a")[0].style.width="280px";
     /* Reset Wall position */
     /* Floor */
     myFloor.position.set(myCenterX, bottomB - (wallThickness / 2), 0.0);
@@ -399,6 +454,7 @@ function resetExperiment()
     myLeft.position.set(leftB-(wallThickness/2)-1, myCenterY, 0.0);
     /* Right */
     myRight.position.set(rightB+(wallThickness/2)+1, myCenterY, 0.0);
+    PIEadjustAnimationTime(1);
 }
 
 /******************* End of Reset Experiment code ***********************/
@@ -431,11 +487,11 @@ function updateExperimentElements(t, dt)
     // PIEambientLight.intensity=1;
     PIEspotLight.castShadow=false;
     // PIEambientLight.castShadow=true;
+
+    document.getElementsByClassName("dg main a")[1].style.width="340px";
+    document.getElementsByClassName("dg main a")[0].style.width="340px";
     PIErender();
     PIEstopAnimation();
-
-    document.getElementsByClassName("dg main a")[1].style.width="280px";
-    document.getElementsByClassName("dg main a")[0].style.width="280px";
 }
 
 /******************* Update (animation changes) code ***********************/

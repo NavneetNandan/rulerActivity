@@ -67,19 +67,33 @@ function initialiseControlVariables() {
 }
 
 function addButtonToControls(text) {
-    var button=document.createElement("button");
+    var button=document.createElement("input");
+    button.setAttribute("type","checkbox");
     button.setAttribute("id", text);
     button.setAttribute("class", "objects");
     button.setAttribute("style","margin-left: 5px;");
+    var para=document.createElement("label");
+    para.setAttribute("for",button.id);
+    para.innerHTML = text;
+    // document.getElementById("object_selection_list").appendChild(button);
+     document.getElementsByTagName("form")[0].appendChild(button);
+    // document.getElementById("object_selection_list").appendChild(para);
+    document.getElementsByTagName("form")[0].appendChild(para);
+}
 
-    button.innerHTML = text;
-    document.getElementById("object_selection_list").appendChild(button);
+function deselect_all(){
+    var all_checkboxes=document.getElementsByClassName("objects");
+    for (var i=0;i<all_checkboxes.length;i++){
+        all_checkboxes[i].checked=false;
+    }
 }
 function initialiseControls() {
     initialiseControlVariables();
     var list=document.createElement("li");
     list.setAttribute("id","object_selection_list");
+    var form=document.createElement("form");
     document.getElementsByClassName("dg main a")[0].children[1].appendChild(list);
+    document.getElementById("object_selection_list").appendChild(form);
     addButtonToControls("Ball");
     addButtonToControls("Cube");
     addButtonToControls("Teapot");
@@ -87,22 +101,32 @@ function initialiseControls() {
     addButtonToControls("Shoe");
 
     document.getElementById("Ball").onclick=function () {
+        deselect_all();
+        this.checked=true;
       createAndAddBall();
     };
     document.getElementById("Cube").onclick=function () {
+        deselect_all();
+        this.checked=true;
       createAndAddCube();
       PIErender();
     };
     document.getElementById("Teapot").onclick=function () {
+        deselect_all();
+        this.checked=true;
       createAndAddTeapot();
       PIErender();
     };
     document.getElementById("Arrow").onclick=function () {
+        deselect_all();
+        this.checked=true;
       createAndAddArrow();
       PIErender();
     };
 
     document.getElementById("Shoe").onclick=function () {
+        deselect_all();
+        this.checked=true;
       createAndAddShoe();
       PIErender();
     };
@@ -225,7 +249,7 @@ function createAndAddArrow() {
         arrow.position.set(object_position_x, object_position_y, object_position_z);
         arrow.scale.x = 0.8;
         arrow.scale.y = 0.8;
-        arrow.scale.z = 0.8;
+        arrow.scale.z = 1.8;
         arrow.rotateY(-Math.PI / 2);
         // arrow.rotateZ(-Math.PI / 2);
         arrow.rotateX(-Math.PI / 2);
@@ -265,23 +289,29 @@ function createAndAddShoe() {
     }
 }
 function createAndAddCube() {
-    loader.load("https://raw.githubusercontent.com/NavneetNandan/PIEshadow/master/sampleExperiment/sampleExperiment/rubiks-cube.json?token=AKRkIv1xy4V3T-N784hWJLAY5B86iYnBks5YsQ2wwA%3D%3D",function (obj) {
-    // loader.load("rubiks-cube.json", function (obj) {
-        if (current != null) {
-            PIEscene.remove(current);
-        }
-        cube = obj;
-        cube.position.set(object_position_x, object_position_y, object_position_z);
-        cube.scale.x = 0.05;
-        cube.scale.y = 0.05;
-        cube.scale.z = 0.05;
-        PIEdragElement(cube);
-        PIEaddElement(cube);
+    var cubeMaterial=new THREE.MeshLambertMaterial({map:THREE.ImageUtils.loadTexture("wood-textures-high-quality-8.jpg",'',onloada)});
+    var cubeGeometry=new THREE.CubeGeometry(0.75,0.75,0.75);
+    var cube=new THREE.Mesh(cubeGeometry,cubeMaterial);
+    cube.position.set(object_position_x, object_position_y, object_position_z);
+    PIEaddElement(cube);
+    PIEdragElement(cube);
+    if (current != null) {
+                PIEscene.remove(current);
+            }
         current = cube;
-        cube.castShadow = false;
-        cube.receiveShadow = false;
-        PIErender();
-    });
+    PIErender();
+    // loader.load("chamfer-cube.json",function (obj) {
+    // // loader.load("rubiks-cube.json", function (obj) {
+    //
+    //     cube = obj;
+    //     cube.scale.x = 5;
+    //     cube.scale.y = 5;
+    //     cube.scale.z = 5;
+    //     PIEdragElement(cube);
+    //     cube.castShadow = false;
+    //     cube.receiveShadow = false;
+    //     PIErender();
+
 }
 function createAndAddBall() {
     console.log("a");
@@ -297,6 +327,12 @@ function createAndAddBall() {
     myBall.castShadow = false;
     PIErender();
 }
+
+var onloada=function () {
+    console.log("asd")
+    PIErender();
+    PIEstartAnimation();
+};
 function loadExperimentElements()
 {
     planeGeo = new THREE.PlaneBufferGeometry( 100.1, 100.1 );
@@ -316,15 +352,16 @@ function loadExperimentElements()
 
     /* initialise Other Variables */
     initialiseOtherVariables();
-    loader.load('https://raw.githubusercontent.com/NavneetNandan/MirrorActivity/master/Experiment/table-0001.json',function (obj) {
-    // loader.load('table-0001.json',function (obj) {
-        table=obj;
-        table.position.set(3,-0.18,0);
-
-        PIEaddElement(table)
-    });
+    // loader.load('https://raw.githubusercontent.com/NavneetNandan/MirrorActivity/master/Experiment/table-0001.json',function (obj) {
+    // // loader.load('table-0001.json',function (obj) {
+    //     table=obj;
+    //     table.position.set(3,-0.18,0);
+    //
+    //     // PIEaddElement(table)
+    // });
     var geometry_meter_ruler = new THREE.BoxGeometry(0.3,2, 0.05);
-    var material_meter_ruler = new THREE.MeshLambertMaterial({map: THREE.ImageUtils.loadTexture('https://raw.githubusercontent.com/NavneetNandan/rulerActivity/master/Experiment/15cm.png')});
+
+    var material_meter_ruler = new THREE.MeshLambertMaterial({map: THREE.ImageUtils.loadTexture('https://raw.githubusercontent.com/NavneetNandan/rulerActivity/master/Experiment/15cm.png','',onloada)});
     meters_ruler = new THREE.Mesh(geometry_meter_ruler, material_meter_ruler);
     meters_ruler.rotateX(-Math.PI/2);
     PIEdragElement(meters_ruler);
@@ -333,7 +370,7 @@ function loadExperimentElements()
     meters_ruler.castShadow = false;
     meters_ruler.receiveShadow = false;
     var geometry_feet_ruler = new THREE.BoxGeometry(0.3,2.05, 0.05);
-    var material_feet_ruler = new THREE.MeshLambertMaterial({map: THREE.ImageUtils.loadTexture('https://raw.githubusercontent.com/NavneetNandan/rulerActivity/master/Experiment/f6.jpg')});
+    var material_feet_ruler = new THREE.MeshLambertMaterial({map: THREE.ImageUtils.loadTexture('https://raw.githubusercontent.com/NavneetNandan/rulerActivity/master/Experiment/f6.jpg','',onloada)});
     feet_ruler = new THREE.Mesh(geometry_feet_ruler, material_feet_ruler);
     feet_ruler.rotateX(-Math.PI/2);
     PIEdragElement(feet_ruler);
@@ -345,7 +382,7 @@ function loadExperimentElements()
     // createAndAddCube(loader);
     // createAndAddBall();
     geometry = new THREE.BoxGeometry( mySceneW * 2, wallThickness, 100);
-    material = new THREE.MeshLambertMaterial( {color: 0x4E342E} );
+    material = new THREE.MeshBasicMaterial( {color: 0xFDF6D5} );
     myFloor  = new THREE.Mesh( geometry, material );
     // myFloor.lookAt(new THREE.Vector3(0,1,0));
     myFloor.position.set(myCenterX, bottomB - (wallThickness / 2), 0.0);
@@ -353,7 +390,8 @@ function loadExperimentElements()
     PIEaddElement(myFloor);
     /* Ceiling */
     geometry = new THREE.BoxGeometry( 100, wallThickness, 100 );
-    material = new THREE.MeshLambertMaterial( {color: 0x2196F3} );
+    material = new THREE.MeshLambertMaterial( {color: 0xFDF6D5} );
+    material = new THREE.MeshLambertMaterial( {color: 0xFDF6D5} );
     myCeiling = new THREE.Mesh( geometry, material );
     myCeiling.position.set(myCenterX, topB+(wallThickness/2), 0.0);
     myFloor.receiveShadow = true;
@@ -421,7 +459,7 @@ function resetExperiment()
 {
     document.getElementsByClassName("dg main a")[1].style.width="340px";
     document.getElementsByClassName("dg main a")[0].style.width="340px";
-    setTimeout(PIEstartAnimation, 1000);
+    // setTimeout(PIEstartAnimation, 1000);
     /* initialise Other Variables */
     initialiseOtherVariables();
     // PIEaddElement(line);

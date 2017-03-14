@@ -99,6 +99,8 @@ function initialiseControls() {
     addButtonToControls("Teapot");
     addButtonToControls("Arrow");
     addButtonToControls("Shoe");
+    addButtonToControls("Cone");
+    addButtonToControls("Pillar");
 
     document.getElementById("Ball").onclick=function () {
         deselect_all();
@@ -128,6 +130,18 @@ function initialiseControls() {
         deselect_all();
         this.checked=true;
       createAndAddShoe();
+      PIErender();
+    };
+    document.getElementById("Cone").onclick=function () {
+        deselect_all();
+        this.checked=true;
+      createAndAddCone();
+      PIErender();
+    };
+    document.getElementById("Pillar").onclick=function () {
+        deselect_all();
+        this.checked=true;
+      createAndAddCylinder();
       PIErender();
     };
     PIEaddInputSlider("Rotate Meter Scale", 0, handleZrotationmeter, -180, 180, 1);
@@ -314,7 +328,6 @@ function createAndAddCube() {
 
 }
 function createAndAddBall() {
-    console.log("a");
     if (current != null) {
         console.log("b");
         PIEscene.remove(current);
@@ -327,12 +340,44 @@ function createAndAddBall() {
     myBall.castShadow = false;
     PIErender();
 }
+function createAndAddCone() {
+    if (current != null) {
+        console.log("b");
+        PIEscene.remove(current);
+    }
+    var geometry = new THREE.ConeGeometry( 0.3, 1, 32 );
+    var material = new THREE.MeshLambertMaterial({map: THREE.ImageUtils.loadTexture('images.jpg','',onloada)} );
+    cone = new THREE.Mesh( geometry, material );
+    cone.rotateX(Math.PI/2);
+    cone.position.set(object_position_x,object_position_y,object_position_z);
+    PIEaddElement(cone);
+    PIEdragElement(cone)
+    current=cone;
+    PIErender();
+}
+var cylinder;
+function createAndAddCylinder() {
+    if (current != null) {
+        console.log("b");
+        PIEscene.remove(current);
+    }
+    var geometry = new THREE.CylinderGeometry( 0.4, 0.4, 1.8 );
+    var material = new THREE.MeshLambertMaterial({map: THREE.ImageUtils.loadTexture('bricks.jpg','',onloada)} );
+    cylinder = new THREE.Mesh( geometry, material );
+    cylinder.rotateX(Math.PI/2);
+    cylinder.position.set(object_position_x,object_position_y,object_position_z);
+    PIEaddElement(cylinder);
+    PIEdragElement(cylinder)
+    current=cylinder;
+    PIErender();
+}
 
 var onloada=function () {
     console.log("asd")
     PIErender();
     PIEstartAnimation();
 };
+var cone;
 function loadExperimentElements()
 {
     planeGeo = new THREE.PlaneBufferGeometry( 100.1, 100.1 );

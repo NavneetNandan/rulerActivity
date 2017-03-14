@@ -285,7 +285,6 @@ function createShoe() {
         // shoe.rotateZ(-Math.PI / 2);
         shoe.rotateX(Math.PI / 2);
         shoe.castShadow = false;
-        console.log("af");
         return shoe;
         // PIEdragElement(musicplayer);
     });
@@ -303,7 +302,7 @@ function createAndAddShoe() {
     }
 }
 function createAndAddCube() {
-    var cubeMaterial=new THREE.MeshLambertMaterial({map:THREE.ImageUtils.loadTexture("wood-textures-high-quality-8.jpg",'',onloada)});
+    var cubeMaterial=new THREE.MeshLambertMaterial({map:THREE.ImageUtils.loadTexture("https://raw.githubusercontent.com/NavneetNandan/rulerActivity/master/Experiment/wood-textures-high-quality-8.jpg",'',onloada)});
     var cubeGeometry=new THREE.CubeGeometry(0.75,0.75,0.75);
     var cube=new THREE.Mesh(cubeGeometry,cubeMaterial);
     cube.position.set(object_position_x, object_position_y, object_position_z);
@@ -329,7 +328,6 @@ function createAndAddCube() {
 }
 function createAndAddBall() {
     if (current != null) {
-        console.log("b");
         PIEscene.remove(current);
     }
     myBall = new THREE.Mesh(new THREE.SphereGeometry(0.2, 32, 32), new THREE.MeshLambertMaterial({color: 0xededed}));
@@ -342,11 +340,10 @@ function createAndAddBall() {
 }
 function createAndAddCone() {
     if (current != null) {
-        console.log("b");
         PIEscene.remove(current);
     }
     var geometry = new THREE.ConeGeometry( 0.3, 1, 32 );
-    var material = new THREE.MeshLambertMaterial({map: THREE.ImageUtils.loadTexture('images.jpg','',onloada)} );
+    var material = new THREE.MeshLambertMaterial({map: THREE.ImageUtils.loadTexture('https://raw.githubusercontent.com/NavneetNandan/rulerActivity/master/Experiment/images.jpg','',onloada)} );
     cone = new THREE.Mesh( geometry, material );
     cone.rotateX(Math.PI/2);
     cone.position.set(object_position_x,object_position_y,object_position_z);
@@ -358,11 +355,10 @@ function createAndAddCone() {
 var cylinder;
 function createAndAddCylinder() {
     if (current != null) {
-        console.log("b");
         PIEscene.remove(current);
     }
     var geometry = new THREE.CylinderGeometry( 0.4, 0.4, 1.8 );
-    var material = new THREE.MeshLambertMaterial({map: THREE.ImageUtils.loadTexture('bricks.jpg','',onloada)} );
+    var material = new THREE.MeshLambertMaterial({map: THREE.ImageUtils.loadTexture('https://raw.githubusercontent.com/NavneetNandan/rulerActivity/master/Experiment/bricks.jpg','',onloada)} );
     cylinder = new THREE.Mesh( geometry, material );
     cylinder.rotateX(Math.PI/2);
     cylinder.position.set(object_position_x,object_position_y,object_position_z);
@@ -373,7 +369,6 @@ function createAndAddCylinder() {
 }
 
 var onloada=function () {
-    console.log("asd")
     PIErender();
     PIEstartAnimation();
 };
